@@ -7,11 +7,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>raininkapi-interface</name>
     <description>raininkapi-interface</description>
-    <parent>
-        <artifactId>raininkapi-backend</artifactId>
-        <groupId>com.yupi</groupId>
-        <version>0.0.1-SNAPSHOT</version>
-    </parent>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

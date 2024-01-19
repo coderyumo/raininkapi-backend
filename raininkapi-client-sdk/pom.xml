@@ -7,11 +7,6 @@
     <version>0.0.1</version>
     <name>raininkapi-client-sdk</name>
     <description>raininkapi-client-sdk</description>
-    <parent>
-        <artifactId>raininkapi-backend</artifactId>
-        <groupId>com.yupi</groupId>
-        <version>0.0.1-SNAPSHOT</version>
-    </parent>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

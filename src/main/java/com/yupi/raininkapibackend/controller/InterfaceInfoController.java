@@ -1,23 +1,20 @@
 package com.yupi.raininkapibackend.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.yumo.raininkapiclientsdk.client.RainApiClient;
 import com.yupi.raininkapibackend.annotation.AuthCheck;
-import com.yupi.raininkapibackend.common.BaseResponse;
-import com.yupi.raininkapibackend.common.DeleteRequest;
-import com.yupi.raininkapibackend.common.ErrorCode;
-import com.yupi.raininkapibackend.common.ResultUtils;
+import com.yupi.raininkapibackend.common.*;
 import com.yupi.raininkapibackend.constant.CommonConstant;
 import com.yupi.raininkapibackend.constant.UserConstant;
 import com.yupi.raininkapibackend.exception.BusinessException;
 import com.yupi.raininkapibackend.exception.ThrowUtils;
-import com.yupi.raininkapibackend.model.dto.Interfaceinfo.InterfaceInfoEditRequest;
-import com.yupi.raininkapibackend.model.dto.Interfaceinfo.InterfaceInfoQueryRequest;
-import com.yupi.raininkapibackend.model.dto.Interfaceinfo.InterfaceInfoUpdateRequest;
-import com.yupi.raininkapibackend.model.dto.Interfaceinfo.InterfaceInfoAddRequest;
+import com.yupi.raininkapibackend.model.dto.Interfaceinfo.*;
 import com.yupi.raininkapibackend.model.entity.InterfaceInfo;
 import com.yupi.raininkapibackend.model.entity.User;
+import com.yupi.raininkapibackend.model.enums.InterfaceInfoStatusEnum;
 import com.yupi.raininkapibackend.model.vo.InterfaceInfoVO;
 import com.yupi.raininkapibackend.service.InterfaceInfoService;
 import com.yupi.raininkapibackend.service.UserService;
@@ -31,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 帖子接口
+ * 接口管理接口
  *
  * @author yumo
  */
@@ -46,6 +43,9 @@ public class InterfaceInfoController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    RainApiClient rainApiClient;
 
     /**
      * 创建
@@ -199,6 +199,86 @@ public class InterfaceInfoController {
     }
 
 
+    @PostMapping("/online")
+    @AuthCheck(mustRole = "admin")
+    public BaseResponse<Boolean> onlineInterfaceInfo(@RequestBody IdRequest idRequest, HttpServletRequest request) {
+
+        ThrowUtils.throwIf(idRequest == null || idRequest.getId() <= 0, ErrorCode.PARAMS_ERROR);
+        long id = idRequest.getId();
+
+        // 判断是否存在
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        if (oldInterfaceInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+
+        //判断该接口是否可以调用
+        com.yumo.raininkapiclientsdk.model.User user1 = new com.yumo.raininkapiclientsdk.model.User();
+        user1.setUsername("yumo");
+        user1.setAge(18);
+        String name = rainApiClient.getNameByPostWithJson(user1);
+        ThrowUtils.throwIf(StrUtil.isBlank(name),ErrorCode.SYSTEM_ERROR,"接口调用失败");
+
+        //仅本人或者管理可修改
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        interfaceInfo.setId(id);
+        interfaceInfo.setStatus(InterfaceInfoStatusEnum.ONLINE.getValue());
+        boolean b = interfaceInfoService.updateById(interfaceInfo);
+        return ResultUtils.success(b);
+    }
+
+
+    @PostMapping("/offline")
+    @AuthCheck(mustRole = "admin")
+    public BaseResponse<Boolean> offInterfaceInfo(@RequestBody IdRequest idRequest, HttpServletRequest request) {
+
+        ThrowUtils.throwIf(idRequest == null || idRequest.getId() <= 0, ErrorCode.PARAMS_ERROR);
+        long id = idRequest.getId();
+
+        // 判断是否存在
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        if (oldInterfaceInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+
+        //仅本人或者管理可修改
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        interfaceInfo.setId(id);
+        interfaceInfo.setStatus(InterfaceInfoStatusEnum.OFFLINE.getValue());
+        boolean b = interfaceInfoService.updateById(interfaceInfo);
+        return ResultUtils.success(b);
+    }
+
+    /**
+     * 测试调用
+     * @param infoInvokeRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/invoke")
+    public BaseResponse<Object> invokeInterfaceInfo(@RequestBody InterfaceInfoInvokeRequest infoInvokeRequest,
+                                                     HttpServletRequest request) {
+
+        ThrowUtils.throwIf(infoInvokeRequest == null || infoInvokeRequest.getId() <= 0, ErrorCode.PARAMS_ERROR);
+        long id = infoInvokeRequest.getId();
+        String userRequestParams = infoInvokeRequest.getUserRequestParams();
+
+        // 判断是否存在
+        InterfaceInfo interfaceInfo = interfaceInfoService.getById(id);
+        ThrowUtils.throwIf(interfaceInfo == null, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(interfaceInfo.getStatus() == InterfaceInfoStatusEnum.OFFLINE.getValue(),
+                ErrorCode.PARAMS_ERROR,"接口已关闭");
+
+        User loginUser = userService.getLoginUser(request);
+        String accessKey = loginUser.getAccessKey();
+        String secretKey = loginUser.getSecretKey();
+        RainApiClient tempRainApiClient = new RainApiClient(accessKey, secretKey);
+        // TODO 用户测试接口，写死
+        String name = tempRainApiClient.getNameByPostWithJson(JSONUtil.toBean(userRequestParams, com.yumo.raininkapiclientsdk.model.User.class));
+
+        //仅本人或者管理可修改
+        return ResultUtils.success(name);
+    }
 
 
 

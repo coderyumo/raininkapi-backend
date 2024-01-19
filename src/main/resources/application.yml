@@ -101,3 +101,7 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.yupi.raininkapibackend.controller
+rainapi:
+  client:
+    access-key: yumo
+    secret-key: abcdefg

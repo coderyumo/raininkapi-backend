@@ -13,6 +13,7 @@
             <result property="status" column="status" jdbcType="INTEGER"/>
             <result property="userId" column="userId" jdbcType="BIGINT"/>
             <result property="requestHeader" column="requestHeader" jdbcType="VARCHAR"/>
+            <result property="requestParams" column="requestParams" jdbcType="VARCHAR"/>
             <result property="responseHeader" column="responseHeader" jdbcType="VARCHAR"/>
             <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
@@ -21,7 +22,7 @@
 
     <sql id="Base_Column_List">
         id,name,description,
-        url,method,status,
+        url,method,status,requestParams,
         userId,requestHeader,responseHeader,
         createTime,updateTime,isDelete
     </sql>
