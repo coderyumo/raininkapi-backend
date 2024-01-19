@@ -11,11 +11,13 @@ import com.yupi.raininkapibackend.constant.CommonConstant;
 import com.yupi.raininkapibackend.constant.UserConstant;
 import com.yupi.raininkapibackend.exception.BusinessException;
 import com.yupi.raininkapibackend.exception.ThrowUtils;
-import com.yupi.raininkapibackend.model.dto.Interfaceinfo.*;
+import com.yupi.raininkapibackend.model.dto.Interfaceinfo.InterfaceInfoAddRequest;
+import com.yupi.raininkapibackend.model.dto.Interfaceinfo.InterfaceInfoInvokeRequest;
+import com.yupi.raininkapibackend.model.dto.Interfaceinfo.InterfaceInfoQueryRequest;
+import com.yupi.raininkapibackend.model.dto.Interfaceinfo.InterfaceInfoUpdateRequest;
 import com.yupi.raininkapibackend.model.entity.InterfaceInfo;
 import com.yupi.raininkapibackend.model.entity.User;
 import com.yupi.raininkapibackend.model.enums.InterfaceInfoStatusEnum;
-import com.yupi.raininkapibackend.model.vo.InterfaceInfoVO;
 import com.yupi.raininkapibackend.service.InterfaceInfoService;
 import com.yupi.raininkapibackend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -200,7 +202,7 @@ public class InterfaceInfoController {
 
 
     @PostMapping("/online")
-    @AuthCheck(mustRole = "admin")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> onlineInterfaceInfo(@RequestBody IdRequest idRequest, HttpServletRequest request) {
 
         ThrowUtils.throwIf(idRequest == null || idRequest.getId() <= 0, ErrorCode.PARAMS_ERROR);
@@ -217,7 +219,7 @@ public class InterfaceInfoController {
         user1.setUsername("yumo");
         user1.setAge(18);
         String name = rainApiClient.getNameByPostWithJson(user1);
-        ThrowUtils.throwIf(StrUtil.isBlank(name),ErrorCode.SYSTEM_ERROR,"接口调用失败");
+        ThrowUtils.throwIf(StrUtil.isBlank(name), ErrorCode.SYSTEM_ERROR, "接口调用失败");
 
         //仅本人或者管理可修改
         InterfaceInfo interfaceInfo = new InterfaceInfo();
@@ -229,7 +231,7 @@ public class InterfaceInfoController {
 
 
     @PostMapping("/offline")
-    @AuthCheck(mustRole = "admin")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> offInterfaceInfo(@RequestBody IdRequest idRequest, HttpServletRequest request) {
 
         ThrowUtils.throwIf(idRequest == null || idRequest.getId() <= 0, ErrorCode.PARAMS_ERROR);
@@ -251,13 +253,14 @@ public class InterfaceInfoController {
 
     /**
      * 测试调用
+     *
      * @param infoInvokeRequest
      * @param request
      * @return
      */
     @PostMapping("/invoke")
     public BaseResponse<Object> invokeInterfaceInfo(@RequestBody InterfaceInfoInvokeRequest infoInvokeRequest,
-                                                     HttpServletRequest request) {
+                                                    HttpServletRequest request) {
 
         ThrowUtils.throwIf(infoInvokeRequest == null || infoInvokeRequest.getId() <= 0, ErrorCode.PARAMS_ERROR);
         long id = infoInvokeRequest.getId();
@@ -267,7 +270,7 @@ public class InterfaceInfoController {
         InterfaceInfo interfaceInfo = interfaceInfoService.getById(id);
         ThrowUtils.throwIf(interfaceInfo == null, ErrorCode.PARAMS_ERROR);
         ThrowUtils.throwIf(interfaceInfo.getStatus() == InterfaceInfoStatusEnum.OFFLINE.getValue(),
-                ErrorCode.PARAMS_ERROR,"接口已关闭");
+                ErrorCode.PARAMS_ERROR, "接口已关闭");
 
         User loginUser = userService.getLoginUser(request);
         String accessKey = loginUser.getAccessKey();
@@ -279,7 +282,6 @@ public class InterfaceInfoController {
         //仅本人或者管理可修改
         return ResultUtils.success(name);
     }
-
 
 
 }

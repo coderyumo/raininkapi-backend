@@ -21,8 +21,9 @@ import java.nio.charset.StandardCharsets;
 public class NameController {
 
     @GetMapping("/{name}")
-    public String getNameByGet(@PathVariable(value = "name") String name) {
-
+    public String getNameByGet(@PathVariable(value = "name") String name,HttpServletRequest request) {
+        String header = request.getHeader("yumo");
+        System.out.println("header = " + header);
         return "发送GET请求 你的名字是：" + name;
     }
 
@@ -60,7 +61,11 @@ public class NameController {
         if (System.currentTimeMillis() - Long.parseLong(timestamp) > 5 * 60 * 1000) {
             return "无权限";
         }
-        return "发送POST请求 JSON中你的名字是：" + user.getUsername();
+        String result =  "发送POST请求 JSON中你的名字是：" + user.getUsername();
+        // 调用成功后次数加1
+
+
+        return result;
     }
 
 }
