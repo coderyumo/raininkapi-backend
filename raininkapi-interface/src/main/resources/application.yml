@@ -1,0 +1,9 @@
+# 应用服务 WEB 访问端口
+server:
+  port: 8102
+  servlet:
+    context-path: /api
+rainapi:
+  client:
+    access-key: yumo
+    secret-key: abcdefg
