@@ -1,161 +1,78 @@
-# SpringBoot 项目初始模板
+# Rain Ink API 开放平台项目
 
-> 作者：[程序员鱼皮](https://github.com/liyupi)
-> 仅分享于 [编程导航知识星球](https://yupi.icu)
 
-基于 Java SpringBoot 的项目初始模板，整合了常用框架和主流业务的示例代码。
+## 项目简介
 
-只需 1 分钟即可完成内容网站的后端！！！大家还可以在此基础上快速开发自己的项目。
+[编程导航知识星球](https://yupi.icu) 原创项目，一个提供 API 接口供开发者调用的平台。
 
-[toc]
+管理员可以接入并发布接口，统计分析各接口调用情况；用户可以注册登录并开通接口调用权限，然后可以浏览接口及在线调试，还能使用客户端 SDK 轻松在代码中调用接口。
 
-## 模板特点
+项目的前端并不复杂，更侧重后端，包含丰富的编程技巧和架构设计层面的知识。
 
-### 主流框架 & 特性
+主页（浏览接口）：
 
-- Spring Boot 2.7.x（贼新）
-- Spring MVC
-- MyBatis + MyBatis Plus 数据访问（开启分页）
-- Spring Boot 调试工具和项目处理器
-- Spring AOP 切面编程
-- Spring Scheduler 定时任务
-- Spring 事务注解
+![](https://yupi-picture-1256524210.cos.ap-shanghai.myqcloud.com/1/1673399530597-2748898e-9f88-4329-85fc-f7bcdba3ae8a.png)
 
-### 数据存储
 
+
+接口管理：
+
+![img](https://yupi-picture-1256524210.cos.ap-shanghai.myqcloud.com/1/1673399741446-9627305d-cd5e-4dbf-b51a-fc249d2206db.png)
+
+
+
+在线调试：
+
+![](https://yupi-picture-1256524210.cos.ap-shanghai.myqcloud.com/1/1673399936177-ae0942ec-f0cc-4481-b101-b109e849b3be.png)
+
+
+
+使用自己开发的客户端 SDK，一行代码调用接口：
+
+![](https://yupi-picture-1256524210.cos.ap-shanghai.myqcloud.com/1/1673400021340-08220e8e-3aaf-4ca6-bdd6-c7165402151e.png)
+
+
+
+从需求分析、技术选型、系统设计、前后端开发再到最后上线，整个项目的制作过程为 **全程直播** ！除了学做项目之外，还能学到很多思考问题、对比方案的套路，并提升排查问题、解决 Bug 的能力。
+
+此外，还能学习到最最最方便的项目开发方式。熟练之后，**几分钟开发一个新功能** 真的轻轻松松！
+
+
+
+## 为什么带大家做这个项目？
+
+首先是它足够新颖，不同于大家在学校时做的管理系统、商城项目等，开放平台通常是知名企业（产品）才会建设和提供的。开放平台类的项目不要说现成的教程了，连相关的文章都少的可怜！
+
+如下图，有点儿人看的文章基本都是几年前的了：
+
+![](https://yupi-picture-1256524210.cos.ap-shanghai.myqcloud.com/1/1673320096281-17d8c09b-93c2-456c-b805-dace09605e7e.png)
+
+此外，开放平台项目涉及 **多个系统** 的交互（不止有一个后端），包含了 API 签名认证、网关、RPC、分布式等必学知识，很适合帮助后端同学开拓眼界、提升系统设计和架构能力，而这点是很多网课不能做到的。
+
+![](https://yupi-picture-1256524210.cos.ap-shanghai.myqcloud.com/1/1673400300009-9d6c7262-d1e8-4484-8386-e1971a423b56.png)
+
+
+
+## 技术选型
+
+### 前端
+
+- React 18
+- Ant Design Pro 5.x 脚手架
+- Ant Design & Procomponents 组件库
+- Umi 4 前端框架
+- OpenAPI 前端代码生成
+
+
+
+### 后端
+
+- Java Spring Boot
 - MySQL 数据库
-- Redis 内存数据库
-- Elasticsearch 搜索引擎
-- 腾讯云 COS 对象存储
-
-### 工具类
-
-- Easy Excel 表格处理
-- Hutool 工具库
-- Apache Commons Lang3 工具类
-- Lombok 注解
-
-### 业务特性
-
-- Spring Session Redis 分布式登录
-- 全局请求响应拦截器（记录日志）
-- 全局异常处理器
-- 自定义错误码
-- 封装通用响应类
-- Swagger + Knife4j 接口文档
-- 自定义权限注解 + 全局校验
-- 全局跨域处理
-- 长整数丢失精度解决
-- 多环境配置
-
-## 业务功能
-
-- 提供示例 SQL（用户、帖子、帖子点赞、帖子收藏表）
-- 用户登录、注册、注销、更新、检索、权限管理
-- 帖子创建、删除、编辑、更新、数据库检索、ES 灵活检索
-- 帖子点赞、取消点赞
-- 帖子收藏、取消收藏、检索已收藏帖子
-- 帖子全量同步 ES、增量同步 ES 定时任务
-- 支持微信开放平台登录
-- 支持微信公众号订阅、收发消息、设置菜单
-- 支持分业务的文件上传
-
-### 单元测试
-
-- JUnit5 单元测试
-- 示例单元测试类
-
-### 架构设计
-
-- 合理分层
-
-## 快速上手
-
-> 所有需要修改的地方鱼皮都标记了 `todo`，便于大家找到修改的位置~
-
-### MySQL 数据库
-
-1）修改 `application.yml` 的数据库配置为你自己的：
-
-```yml
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/my_db
-    username: root
-    password: 123456
-```
-
-2）执行 `sql/create_table.sql` 中的数据库语句，自动创建库表
-
-3）启动项目，访问 `http://localhost:8101/api/doc.html` 即可打开接口文档，不需要写前端就能在线调试接口了~
-
-![](doc/swagger.png)
-
-### Redis 分布式登录
-
-1）修改 `application.yml` 的 Redis 配置为你自己的：
-
-```yml
-spring:
-  redis:
-    database: 1
-    host: localhost
-    port: 6379
-    timeout: 5000
-    password: 123456
-```
-
-2）修改 `application.yml` 中的 session 存储方式：
-
-```yml
-spring:
-  session:
-    store-type: redis
-```
-
-3）移除 `MainApplication` 类开头 `@SpringBootApplication` 注解内的 exclude 参数：
-
-修改前：
-
-```java
-@SpringBootApplication(exclude = {RedisAutoConfiguration.class})
-```
-
-修改后：
-
-```java
-@SpringBootApplication
-```
-
-### Elasticsearch 搜索引擎
-
-1）修改 `application.yml` 的 Elasticsearch 配置为你自己的：
-
-```yml
-spring:
-  elasticsearch:
-    uris: http://localhost:9200
-    username: root
-    password: 123456
-```
-
-2）复制 `sql/post_es_mapping.json` 文件中的内容，通过调用 Elasticsearch 的接口或者 Kibana Dev Tools 来创建索引（相当于数据库建表）
-
-```
-PUT post_v1
-{
- 参数见 sql/post_es_mapping.json 文件
-}
-```
-
-这步不会操作的话需要补充下 Elasticsearch 的知识，或者自行百度一下~
-
-3）开启同步任务，将数据库的帖子同步到 Elasticsearch
-
-找到 job 目录下的 `FullSyncPostToEs` 和 `IncSyncPostToEs` 文件，取消掉 `@Component` 注解的注释，再次执行程序即可触发同步：
-
-```java
-// todo 取消注释开启任务
-//@Component
-```
+- MyBatis-Plus 及 MyBatis X 自动生成
+- API 签名认证（Http 调用）
+- Spring Boot Starter（SDK 开发）
+- Dubbo 分布式（RPC、Nacos）
+- Swagger + Knife4j 接口文档生成
+- Spring Cloud Gateway 微服务网关
+- Hutool、Apache Common Utils、Gson 等工具库
